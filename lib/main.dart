@@ -15,19 +15,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: () => MaterialApp(
-        title: 'Flutter Demo',
         theme: ThemeData(
           brightness: Brightness.light,
-          /* light theme settings */
         ),
         darkTheme: ThemeData(
-            brightness: Brightness.dark, scaffoldBackgroundColor: Colors.black),
+            canvasColor: Colors.black,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: Colors.black),
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         home: const MyHomePage(),
@@ -46,7 +45,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildBody());
+    return Scaffold(
+      body: _buildBody(),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        currentIndex: 0, // this will be set when a new tab is tapped
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset(R.ASSETS_IMAGES_TAB_BAR_ICON_1_PNG),
+            label: 'Hot',
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: SvgPicture.asset(R.ASSETS_ICONS_TAB_BAR_ICON_2_SVG),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: SvgPicture.asset(R.ASSETS_ICONS_TAB_BAR_ICON_3_SVG),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: SvgPicture.asset(R.ASSETS_ICONS_TAB_BAR_ICON_4_SVG),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Image.asset(R.ASSETS_IMAGES_TAB_BAR_ICON_5_PNG),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _buildBody() {
@@ -58,22 +85,84 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           _buildTitle(),
           _buildList(),
+          _buildFooter()
         ],
       ),
     );
   }
 
+  Widget _buildFooter() {
+    return Column(
+      children: [
+        Image.asset(R.ASSETS_IMAGES_VERIFICATION_ICON_PNG),
+        Text('Check back soon for new clips and creator content.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22.sp)),
+        Padding(
+          padding: EdgeInsets.only(top: 8.w, bottom: 40.w),
+          child: Text('In the meantime join our discord.',
+              style: TextStyle(
+                  color: const Color(0xffA19DAA),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13.sp)),
+        ),
+        _buildDiscordButton()
+      ],
+    );
+  }
+
+  Widget _buildDiscordButton() {
+    return DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xffbf9000), Colors.black],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          border: Border.all(color: Colors.yellow.withAlpha(120), width: 0.5.w),
+          borderRadius: BorderRadius.circular(24.w),
+        ),
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.transparent,
+              onSurface: Colors.transparent,
+              shadowColor: Colors.transparent,
+            ),
+            onPressed: () {},
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 18,
+                bottom: 18,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    R.ASSETS_IMAGES_DISCORD_PNG,
+                    width: 22.w,
+                  ),
+                  SizedBox(width: 8.w),
+                  const Text("Join Metaview Discord"),
+                ],
+              ),
+            )));
+  }
+
   Widget _buildTitle() {
     return Row(
       children: [
-        const GradientText(
-          'Trending Today ',
-          gradient: LinearGradient(colors: [
+        GradientText(
+          'Trending Today 🔥',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 34.sp,
+          ),
+          gradient: const LinearGradient(colors: [
             cTitleGradientStart,
             cTitleGradientEnd,
           ]),
         ),
-        SvgPicture.asset(R.ASSETS_ICONS_TAB_BAR_ICON_2_SVG),
       ],
     );
   }
@@ -81,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildList() {
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: mockedData.length,
       itemBuilder: ((context, index) {
         return ListItem(mockedData[index]);

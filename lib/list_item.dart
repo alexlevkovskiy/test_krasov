@@ -42,7 +42,7 @@ class ListItem extends StatelessWidget {
                       gradient: RadialGradient(
                           colors: [mainColor, Colors.transparent], radius: 1),
                     ),
-                    key: UniqueKey(),
+                    //  key: UniqueKey(),
                     child: Padding(
                       padding: EdgeInsets.all(16.w),
                       child: Column(
